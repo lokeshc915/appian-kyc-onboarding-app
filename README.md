@@ -650,10 +650,10 @@ Run backend with profile:
 - `SPRING_PROFILES_ACTIVE=s3`
 - `SPRING_PROFILES_ACTIVE=azure`
   
-```
+
 # Appian → Code Traceability Matrix (PV → Field → API → UI)
 
-> PV = “Process/Requirement” from the Appian requirements document.
+
 
 | PV / Requirement | Data fields | API | UI Screen/Component |
 |---|---|---|---|
@@ -668,7 +668,7 @@ Run backend with profile:
 | Audit history timeline | `audit_event.*` | `GET /api/cases/{id}/audit` | Audit Timeline page |
 | Admin dashboard & reports | Aggregations | `GET /api/admin/stats` | Admin Dashboard |
 
-```
+
 
 
 # Quality Guide (Tests, Coverage, SonarQube)
