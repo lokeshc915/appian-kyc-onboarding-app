@@ -1,0 +1,8 @@
+
+{
+  "caseId": 1001,
+  "eventType": "CASE_SUBMITTED",
+  "status": "SUBMITTED",
+  "country": "US",
+  "riskLevel": "LOW"
+}

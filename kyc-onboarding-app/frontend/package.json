@@ -1,0 +1,29 @@
+{
+  "name": "kyc-onboarding-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "ng serve --port 4200",
+    "build": "ng build",
+    "test:coverage": "ng test --watch=false --code-coverage"
+  },
+  "dependencies": {
+    "@angular/animations": "~14.3.0",
+    "@angular/common": "~14.3.0",
+    "@angular/compiler": "~14.3.0",
+    "@angular/core": "~14.3.0",
+    "@angular/forms": "~14.3.0",
+    "@angular/platform-browser": "~14.3.0",
+    "@angular/platform-browser-dynamic": "~14.3.0",
+    "@angular/router": "~14.3.0",
+    "rxjs": "~7.5.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.11.4"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "~14.3.0",
+    "@angular/cli": "~14.3.0",
+    "@angular/compiler-cli": "~14.3.0",
+    "typescript": "~4.7.4"
+  }
+}

@@ -1,0 +1,14 @@
+
+{
+  "type": "record",
+  "name": "CaseEvent",
+  "namespace": "com.example.kyc.avro",
+  "fields": [
+    {"name": "caseId", "type": "long"},
+    {"name": "eventType", "type": "string"},
+    {"name": "status", "type": "string"},
+    {"name": "country", "type": "string"},
+    {"name": "riskLevel", "type": "string"},
+    {"name": "occurredAt", "type": "string"}
+  ]
+}

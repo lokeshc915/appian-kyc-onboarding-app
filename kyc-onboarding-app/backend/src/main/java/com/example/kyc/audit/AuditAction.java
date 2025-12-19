@@ -1,0 +1,13 @@
+package com.example.kyc.audit;
+
+public enum AuditAction {
+  CASE_CREATED,
+  STEP1_SAVED,
+  DOCUMENT_UPLOADED,
+  DOCUMENT_DELETED,
+  CASE_SUBMITTED,
+  CASE_REVIEW_STARTED,
+  CASE_APPROVED,
+  CASE_REJECTED,
+  SLA_BREACHED
+}

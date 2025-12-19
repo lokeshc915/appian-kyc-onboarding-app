@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+  flyway:
+    enabled: true
+
+app:
+  storage:
+    base-dir: ${APP_STORAGE_BASE_DIR:/data/files}
+
+# For docker demo only; replace in real env
+security:
+  jwt:
+    secret: "CHANGE_ME_IN_PROD"

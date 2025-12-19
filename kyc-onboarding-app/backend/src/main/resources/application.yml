@@ -1,0 +1,88 @@
+server:
+  port: 8080
+
+\1  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/kyc_onboarding?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 25MB
+      max-request-size: 25MB
+
+# OAuth2: fill these for Flow B
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: YOUR_GOOGLE_CLIENT_ID
+            client-secret: YOUR_GOOGLE_CLIENT_SECRET
+            scope: openid,profile,email
+
+app:
+  storage:
+    base-dir: storage/uploads
+  sla:
+    # Appian timers equivalent
+    step1-hours: 48
+    step2-hours: 72
+    review-hours: 24
+    check-interval-seconds: 300
+  security:
+    jwt:
+      issuer: kyc-onboarding
+      # Use a 256-bit (or longer) secret in real environments
+      secret: "CHANGE_ME_TO_A_LONG_RANDOM_SECRET_CHANGE_ME_TO_A_LONG_RANDOM_SECRET"
+      access-token-minutes: 60
+  frontend:
+    oauth2-redirect-url: "http://localhost:4200/oauth2/redirect"
+
+  redis:
+    uri: ${APP_REDIS_URI:redis://localhost:6379}
+
+  abac:
+    allowed-countries: ${APP_ABAC_ALLOWED_COUNTRIES:US,CA,IN}
+    max-risk-level: ${APP_ABAC_MAX_RISK_LEVEL:MEDIUM}
+
+  upload:
+    max-bytes: ${APP_UPLOAD_MAX_BYTES:26214400}
+    allowed-content-types: ${APP_UPLOAD_ALLOWED_CT:application/pdf,image/jpeg,image/png}
+
+
+spring:
+  kafka:
+    bootstrap-servers: ${APP_KAFKA_BOOTSTRAP:localhost:9092}
+    consumer:
+      group-id: kyc-default
+      auto-offset-reset: earliest
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+app:
+  kafka:
+    topics:
+      case-events: kyc.case.events
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when_authorized

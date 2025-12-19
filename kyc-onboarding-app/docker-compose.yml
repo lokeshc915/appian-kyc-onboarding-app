@@ -1,0 +1,98 @@
+version: "3.9"
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: kyc
+      MYSQL_USER: kyc
+      MYSQL_PASSWORD: kyc
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    command: ["--default-authentication-plugin=mysql_native_password"]
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./kyc-onboarding-app/backend
+      dockerfile: Dockerfile
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/kyc?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: kyc
+      SPRING_DATASOURCE_PASSWORD: kyc
+      APP_STORAGE_BASE_DIR: /data/files
+      APP_REDIS_URI: redis://redis:6379
+    depends_on:
+      - mysql
+      - redis
+    ports:
+      - "8080:8080"
+    volumes:
+      - kyc_files:/data/files
+
+  frontend:
+    build:
+      context: ./kyc-onboarding-app/frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "4200:80"
+
+volumes:
+  mysql_data:
+  kyc_files:
+
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./kyc-onboarding-app/docs/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    depends_on:
+      - backend
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./kyc-onboarding-app/docs/monitoring/grafana-provisioning/provisioning:/etc/grafana/provisioning:ro
+      - ./kyc-onboarding-app/docs/monitoring/grafana-provisioning/dashboards:/var/lib/grafana/dashboards:ro
+    depends_on:
+      - prometheus
+
+
+  sonarqube:
+    image: sonarqube:community
+    ports:
+      - "9000:9000"
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
