@@ -52,7 +52,7 @@ flowchart LR
 
 ```mermaid
 flowchart TB
-  C[Angular Components] -->|HTTP| G[API Gateway (Spring Boot)]
+  C[Angular Components] -->|HTTP| G[API Gateway Spring Boot]
   G --> AC[AuthController]
   G --> OC[OnboardingCaseController]
   G --> DC[DocumentController]
